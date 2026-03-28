@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CityScrub API - Pricing</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            /* Colors from CityScrub2.png logo */
+            --teal-primary: #00d4c8;
+            --teal-light: #5eead4;
+            --teal-dark: #0d9488;
+            --purple-primary: #8b5cf6;
+            --purple-light: #a78bfa;
+            --purple-dark: #6d28d9;
+            --navy-dark: #0f172a;
+            --navy-medium: #1e293b;
+            --white: #ffffff;
+            --gray-light: #f1f5f9;
+            --gray-medium: #64748b;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, var(--navy-dark) 0%, #1e1b4b 50%, #312e81 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            font-size: 17px;
+        }
+        
+        .container { max-width: 1200px; margin: 0 auto; }
+        
+        .header { 
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 40px;
+            align-items: center;
+            margin-bottom: 60px;
+            color: white;
+        }
+        
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .logo-container img {
+            width: 200px;
+            height: 200px;
+            border-radius: 32px;
+            box-shadow: 0 15px 50px rgba(139, 92, 246, 0.4), 0 0 0 4px rgba(0, 212, 200, 0.3);
+        }
+        
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .header h1 { 
+            font-size: 3.5rem; 
+            margin-bottom: 20px; 
+            text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+            background: linear-gradient(90deg, var(--white) 0%, var(--teal-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+        }
+        
+        .header p { 
+            font-size: 1.35rem; 
+            line-height: 1.6;
+            opacity: 0.9; 
+            max-width: 90%;
+            color: rgba(255,255,255,0.85);
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+        
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 20px;
+            padding: 45px 35px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .pricing-card:hover { 
+            transform: translateY(-10px); 
+            box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+            border-color: var(--teal-primary);
+        }
+        
+        .pricing-card.featured { 
+            border: 3px solid var(--teal-primary);
+            box-shadow: 0 20px 60px rgba(0, 212, 200, 0.25);
+        }
+        
+        .pricing-card.featured:hover { 
+            transform: translateY(-10px);
+            box-shadow: 0 30px 80px rgba(0, 212, 200, 0.35);
+        }
+        
+        .badge {
+            position: absolute;
+            top: 15px;
+            right: -35px;
+            background: linear-gradient(135deg, var(--teal-primary) 0%, var(--teal-dark) 100%);
+            color: var(--navy-dark);
+            padding: 6px 45px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            transform: rotate(45deg);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            letter-spacing: 1px;
+        }
+        
+        .plan-name { 
+            font-size: 1.7rem; 
+            font-weight: 700; 
+            color: var(--navy-dark); 
+            margin-bottom: 12px; 
+        }
+        
+        .price { 
+            font-size: 3.4rem; 
+            font-weight: 800; 
+            background: linear-gradient(135deg, var(--purple-dark) 0%, var(--teal-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px; 
+        }
+        
+        .price span { 
+            font-size: 1.1rem; 
+            font-weight: 400; 
+            color: var(--gray-medium); 
+            -webkit-text-fill-color: var(--gray-medium);
+        }
+        
+        .credits { 
+            font-size: 1.2rem; 
+            color: var(--teal-dark); 
+            font-weight: 600; 
+            margin-bottom: 28px; 
+            padding-bottom: 28px; 
+            border-bottom: 2px solid rgba(0, 212, 200, 0.2);
+        }
+        
+        .features { 
+            list-style: none; 
+            margin-bottom: 35px; 
+            flex-grow: 1;
+        }
+        
+        .features li { 
+            padding: 12px 0; 
+            color: var(--navy-medium); 
+            display: flex; 
+            align-items: center; 
+            gap: 14px; 
+            font-size: 1.05rem;
+        }
+        
+        .features li::before { 
+            content: "✓"; 
+            color: var(--teal-primary); 
+            font-weight: bold; 
+            font-size: 1.4rem;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 212, 200, 0.12);
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        
+        .cta-button {
+            width: 100%;
+            padding: 18px 30px;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .cta-button.primary { 
+            background: linear-gradient(135deg, var(--teal-primary) 0%, var(--teal-dark) 100%);
+            color: var(--navy-dark);
+            box-shadow: 0 4px 18px rgba(0, 212, 200, 0.35);
+        }
+        
+        .cta-button.primary:hover { 
+            transform: scale(1.03);
+            box-shadow: 0 8px 30px rgba(0, 212, 200, 0.5);
+        }
+        
+        .cta-button.secondary { 
+            background: var(--gray-light);
+            color: var(--navy-medium);
+            border: 2px solid rgba(0, 212, 200, 0.3);
+        }
+        
+        .cta-button.secondary:hover { 
+            background: rgba(0, 212, 200, 0.1);
+            border-color: var(--teal-primary);
+        }
+        
+        .info-section {
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 20px;
+            padding: 45px;
+            margin-bottom: 35px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        .info-section h2 { 
+            color: var(--navy-dark); 
+            margin-bottom: 25px; 
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .info-section p, .info-section ul { 
+            color: var(--navy-medium); 
+            font-size: 1.1rem; 
+            line-height: 1.85; 
+        }
+        
+        .info-section ul { 
+            margin-left: 25px; 
+            margin-top: 15px; 
+        }
+        
+        .info-section li { 
+            margin-bottom: 15px;
+            padding-left: 12px;
+        }
+        
+        .info-section li strong {
+            color: var(--teal-dark);
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(0, 212, 200, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border-left: 4px solid var(--teal-primary);
+            padding: 28px 35px;
+            border-radius: 14px;
+            margin: 28px 0;
+        }
+        
+        .highlight-box h3 { 
+            color: var(--teal-dark); 
+            margin-bottom: 14px;
+            font-size: 1.4rem;
+        }
+        
+        .highlight-box p {
+            font-size: 1.1rem;
+        }
+        
+        .footer { 
+            text-align: center; 
+            color: rgba(255,255,255,0.7); 
+            padding: 35px;
+            font-size: 1.05rem;
+        }
+        
+        @media (max-width: 1200px) {
+            .pricing-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header { 
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 25px;
+            }
+            .header h1 { font-size: 2.4rem; }
+            .logo-container img { width: 150px; height: 150px; }
+            .header-content { align-items: center; }
+            .header p { max-width: 100%; font-size: 1.2rem; }
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            body { font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo-container">
+                <img src="https://raw.githubusercontent.com/miket333/PublicAssets/main/CityScrub2.png" alt="CityScrub Logo">
+            </div>
+            <div class="header-content">
+                <h1>CityScrub API</h1>
+                <p>Intelligent city name normalization and fuzzy matching. Clean messy city names instantly with typo correction, abbreviation expansion, and fuzzy search.</p>
+            </div>
+        </header>
+        
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="plan-name">Free</div>
+                <div class="price">$0</div>
+                <div class="credits">1,000 credits/month</div>
+                <ul class="features">
+                    <li>Fuzzy city search</li>
+                    <li>Global city database</li>
+                    <li>Max batch: 10 cities</li>
+                    <li>Standard support</li>
+                </ul>
+                <button class="cta-button primary">Get Started</button>
+            </div>
+            
+            <div class="pricing-card">
+                <div class="plan-name">Starter</div>
+                <div class="price">$9<span>/mo</span></div>
+                <div class="credits">20,000 credits/month</div>
+                <ul class="features">
+                    <li>Fuzzy city search</li>
+                    <li>Global city database</li>
+                    <li>Max batch: 500 cities</li>
+                    <li>Priority support</li>
+                </ul>
+                <button class="cta-button primary">Choose Starter</button>
+            </div>
+            
+            <div class="pricing-card featured">
+                <div class="badge">Popular</div>
+                <div class="plan-name">Growth</div>
+                <div class="price">$29<span>/mo</span></div>
+                <div class="credits">100,000 credits/month</div>
+                <ul class="features">
+                    <li>Fuzzy city search</li>
+                    <li>Global city database</li>
+                    <li>Max batch: 5,000 cities</li>
+                    <li>Priority support</li>
+                </ul>
+                <button class="cta-button primary">Choose Growth</button>
+            </div>
+            
+            <div class="pricing-card">
+                <div class="plan-name">Scale</div>
+                <div class="price">$79<span>/mo</span></div>
+                <div class="credits">500,000 credits/month</div>
+                <ul class="features">
+                    <li>Fuzzy city search</li>
+                    <li>Global city database</li>
+                    <li>Max batch: 10,000 cities</li>
+                    <li>Dedicated support</li>
+                </ul>
+                <button class="cta-button primary">Choose Scale</button>
+            </div>
+        </div>
+        
+        <div class="info-section">
+            <h2>📊 How Credits Work</h2>
+            <div class="highlight-box">
+                <h3>1 Credit = 1 City Normalized</h3>
+                <p>Each city name you process consumes one credit from your monthly quota. Batch operations are charged per city in the batch.</p>
+            </div>
+            <ul>
+                <li><strong>Single Search:</strong> Normalizing "Nw Yrk" → "New York, NY, United States" = 1 credit</li>
+                <li><strong>Batch Normalize:</strong> Processing 100 cities in one request = 100 credits</li>
+                <li><strong>Lookup by ID:</strong> Retrieving a city by its unique ID = 1 credit</li>
+            </ul>
+            <p style="margin-top: 20px;">Credits reset at the beginning of each billing cycle. Unused credits do not roll over.</p>
+        </div>
+        
+        <div class="info-section">
+            <h2>🚀 Key Features</h2>
+            <ul>
+                <li><strong>Fuzzy Matching:</strong> Handles typos like "Nw Yrk", "Los Anglese", "Sinsinati"</li>
+                <li><strong>Abbreviation Expansion:</strong> Understands "NYC" → New York, "LA" → Los Angeles</li>
+                <li><strong>Global Coverage:</strong> Cities worldwide</li>
+                <li><strong>Fast Response:</strong> Sub-100ms average response time</li>
+                <li><strong>Country/State Filtering:</strong> Narrow searches by country or state code</li>
+                <li><strong>Fallback Results:</strong> Returns multiple matches when confidence is low</li>
+            </ul>
+        </div>
+        
+        <footer class="footer">
+            <p>© 2026 CityScrub API. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>
